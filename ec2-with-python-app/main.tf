@@ -91,7 +91,7 @@ resource "aws_instance" "web-server" {
 
      connection {
        type = "ssh"
-       user = "ubuntu"
+       user = "ec2-user"
        private_key = file("~/.ssh/id_rsa")
        host = self.public_ip
      }
@@ -99,15 +99,15 @@ resource "aws_instance" "web-server" {
     # File provisioner to copy a file from local to the remote EC2 instance
      provisioner "file" {
         source = "app.py"
-        destination = "/home/ubuntu/app.py"       
+        destination = "/home/ec2-user/app.py"       
      }
 
      provisioner "remote-exec" {
        inline = [ 
       "echo 'Hello from the remote instance'",
-      "sudo apt update -y",  # Update package lists (for ubuntu)
-      "sudo apt-get install -y python3-pip",  # Example package installation
-      "cd /home/ubuntu",
+      "sudo yum update -y",  # Update package lists (for ubuntu)
+      "sudo yum install -y python3-pip",  # Example package installation
+      "sudo cd /root",
       "sudo pip3 install flask",
       "sudo nohup python3 app.py &",        
 ]
